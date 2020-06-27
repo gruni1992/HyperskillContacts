@@ -10,8 +10,30 @@ import java.util.stream.IntStream;
 public class PhoneBook {
     List<Record> records = new ArrayList<>();
 
+    private boolean isValidNumberFormat(String phoneNumber) {
+        String noBrackets = "[+]?([ -][\\d\\w]{2,})*";
+        String firstGroupBrackets = "[+]?\\([\\d\\w]{1,}\\)([ -][\\d\\w]{2,})*";
+        String secondGroupBrackets = "[+]?[\\d\\w]{1,}[- ]?(\\([\\d\\w]{2,}\\))?([ -][\\d\\w]{2,})*";
+
+        return phoneNumber.matches(noBrackets)
+                || phoneNumber.matches(firstGroupBrackets)
+                || phoneNumber.matches(secondGroupBrackets);
+    }
+
     public String count() {
         return String.format("The Phone Book has %s records.", records.size());
+    }
+
+    public String list() {
+        return IntStream.range(0, records.size())
+                .mapToObj(this::getListItem)
+                .collect(Collectors.joining("\n"));
+
+    }
+
+    private String getListItem(int index) {
+        Record record = records.get(index);
+        return String.format("%s. %s %s, %s", index+1, record.getFirstName(), record.getLastName(), record.getPhoneNumber());
     }
 
     public String add() {
@@ -38,25 +60,6 @@ public class PhoneBook {
             return "";
         }
         return phoneNumber;
-    }
-
-    private boolean isValidNumberFormat(String phoneNumber) {
-        String noBrackets = "[+]?([ -][\\d\\w]{2,})*";
-        String firstGroupBrackets = "[+]?\\([\\d\\w]{1,}\\)([ -][\\d\\w]{2,})*";
-        String secondGroupBrackets = "[+]?[\\d\\w]{1,}[- ]?(\\([\\d\\w]{2,}\\))?([ -][\\d\\w]{2,})*";
-
-        return phoneNumber.matches(noBrackets)
-                || phoneNumber.matches(firstGroupBrackets)
-                || phoneNumber.matches(secondGroupBrackets);
-    }
-
-    public String remove() {
-        if (records.size() == 0) {
-            return "No records to remove!";
-        }
-        int index = readIndex();
-        records.remove(index);
-        return "The record removed!";
     }
 
     public String edit() {
@@ -92,16 +95,13 @@ public class PhoneBook {
         return Integer.parseInt(answer) - 1;
     }
 
-    public String list() {
-        return IntStream.range(0, records.size())
-                .mapToObj(this::getListItem)
-                .collect(Collectors.joining("\n"));
-
-    }
-
-    private String getListItem(int index) {
-        Record record = records.get(index);
-        return String.format("%s. %s %s, %s", index+1, record.getFirstName(), record.getLastName(), record.getPhoneNumber());
+    public String remove() {
+        if (records.size() == 0) {
+            return "No records to remove!";
+        }
+        int index = readIndex();
+        records.remove(index);
+        return "The record removed!";
     }
 
 
