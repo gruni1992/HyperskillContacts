@@ -1,24 +1,26 @@
 package contacts;
 
-import contacts.exception.WrongNumberFormatException;
-
 public class Record {
-    private String firstName;
-    private String lastName;
-    private String phoneNumber;
+    private final String firstName;
+    private final String lastName;
+    private final String phoneNumber;
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber.equals("") ? "[no number]" : phoneNumber;
+    }
 
     public Record(String firstName, String lastName, String phoneNumber) {
-        if (!isValidNumberFormat(phoneNumber)) {
-            throw new WrongNumberFormatException();
-        }
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
-    }
-
-    private boolean isValidNumberFormat(String phoneNumber) {
-        //TODO
-        return false;
     }
 
 }
